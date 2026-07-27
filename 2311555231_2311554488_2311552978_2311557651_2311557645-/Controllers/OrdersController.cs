@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using YourProject.Data;
+using YourProject.Models;
 
 namespace _2311555231_2311554488_2311552978_2311557651_2311557645_.Controllers
 {
@@ -38,6 +39,57 @@ namespace _2311555231_2311554488_2311552978_2311557651_2311557645_.Controllers
                 .ToListAsync();
 
             return View(orders);
+        }
+        [HttpGet]
+        public IActionResult Create()
+        {
+            ViewBag.Products = _context.Products.ToList();
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(string customerName, int productId, int quantity)
+        {
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                var product = await _context.Products.FindAsync(productId);
+                if (product == null || quantity > product.StockQuantity)
+                {
+                    ModelState.AddModelError("", $"Số lượng vượt quá tồn kho (còn lại: {product?.StockQuantity ?? 0})");
+                    ViewBag.Products = _context.Products.ToList();
+                    return View();
+                }
+
+                var unitPrice = product.Price;
+                var totalAmount = quantity * unitPrice;
+
+                var order = new Order { CustomerName = customerName, OrderDate = DateTime.Now, TotalAmount = totalAmount };
+                _context.Orders.Add(order);
+                await _context.SaveChangesAsync();
+
+                _context.OrderDetails.Add(new OrderDetail
+                {
+                    OrderId = order.Id,
+                    ProductId = productId,
+                    Quantity = quantity,
+                    UnitPrice = unitPrice
+                });
+
+                product.StockQuantity -= quantity;
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                ModelState.AddModelError("", "Lỗi: " + ex.Message);
+                ViewBag.Products = _context.Products.ToList();
+                return View();
+            }
         }
     }
 }

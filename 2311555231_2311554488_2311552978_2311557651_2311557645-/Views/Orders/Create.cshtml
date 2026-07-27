@@ -1,0 +1,15 @@
+﻿<form method="post">
+    <input name="customerName" class="form-control mb-2" placeholder="Tên khách hàng" required />
+    <select name="productId" class="form-control mb-2">
+        @foreach (var p in (List<Product>)ViewBag.Products)
+        {
+            <option value="@p.Id">@p.Name — @p.Price đ (còn @p.StockQuantity)</option>
+        }
+    </select>
+    <input type="number" name="quantity" class="form-control mb-2" min="1" required />
+    @if (!ViewData.ModelState.IsValid)
+    {
+        <div class="alert alert-danger">@Html.ValidationSummary()</div>
+    }
+    <button type="submit" class="btn btn-primary">Tạo đơn hàng</button>
+</form>
