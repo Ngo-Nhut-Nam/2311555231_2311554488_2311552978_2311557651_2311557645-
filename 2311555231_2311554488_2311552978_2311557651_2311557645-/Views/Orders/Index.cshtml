@@ -1,8 +1,26 @@
 ﻿@model List<OrderListViewModel>
-<table class="table">
-    <thead><tr><th>Order ID</th><th>Customer Name</th><th>Order Date</th><th>Số loại sản phẩm</th></tr></thead>
-    <tbody>
-        @foreach (var o in Model)
+
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-auto">
+            <input name="customerName" class="form-control" placeholder="Tên khách hàng" />
+        </div>
+        <div class="col-auto">
+            <input name="fromPrice" type="number" class="form-control" placeholder="Từ giá" />
+        </div>
+        <div class="col-auto">
+            <input name="toPrice" type="number" class="form-control" placeholder="Đến giá" />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-secondary">Tìm kiếm</button>
+        </div>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr><th>Order ID</th><th>Customer Name</th><th>Order Date</th><th>Số loại sản phẩm</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var o in Model)
         {
             <tr>
                 <td>@o.Id</td>
@@ -11,5 +29,5 @@
                 <td>@o.DistinctProductCount</td>
             </tr>
         }
-    </tbody>
-</table>
+        </tbody>
+    </table>
