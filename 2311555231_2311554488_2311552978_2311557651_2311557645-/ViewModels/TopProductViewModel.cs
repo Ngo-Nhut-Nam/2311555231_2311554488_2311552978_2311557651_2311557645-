@@ -6,4 +6,5 @@
 
         public int TotalQuantitySold { get; set; }
     }
+    //
 }
