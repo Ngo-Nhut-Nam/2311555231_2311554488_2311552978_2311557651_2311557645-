@@ -1,4 +1,4 @@
-using YourProject.Data;
+using _2311555231_2311554488_2311552978_2311557651_2311557645_.Data;
 using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>

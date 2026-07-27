@@ -1,8 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using YourProject.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using _2311555231_2311554488_2311552978_2311557651_2311557645_.Models;
 
-namespace YourProject.Data
+namespace _2311555231_2311554488_2311552978_2311557651_2311557645_.Data
 {
     public class AppDbContext : DbContext
     {
@@ -16,26 +15,6 @@ namespace YourProject.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<OrderDetail>().HasKey(od => new { od.OrderId, od.ProductId });
-        }
-    }
-
-    public class OrdersController : Controller
-    {
-        private readonly AppDbContext _context;
-        public OrdersController(AppDbContext context) { _context = context; }
-
-        public async Task<IActionResult> Index()
-        {
-            var orders = await _context.Orders
-                .Select(o => new OrderListViewModel
-                {
-                    Id = o.Id,
-                    CustomerName = o.CustomerName,
-                    OrderDate = o.OrderDate,
-                    DistinctProductCount = o.OrderDetails.Select(od => od.ProductId).Distinct().Count()
-                })
-                .ToListAsync();
-            return View(orders);
         }
     }
 }
