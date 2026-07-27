@@ -1,0 +1,12 @@
+﻿@model _2311555231_2311554488_2311552978_2311557651_2311557645_.ViewModels.StatisticsViewModel
+
+<h3>Tổng doanh thu: @Model.TotalRevenue.ToString("N0") đ</h3>
+
+<h4>🏆 Top 3 sản phẩm bán chạy</h4>
+
+<ol>
+    @foreach (var p in Model.TopProducts)
+    {
+        <li>@p.ProductName — Đã bán: @p.TotalQuantitySold</li>
+    }
+</ol>
